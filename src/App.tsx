@@ -165,22 +165,22 @@ function AppContent() {
   const loadHistory = async () => {
     try {
       const res = await fetch('/api/history');
-      if (!res.ok) throw new Error("Failed to fetch history");
+      if (!res.ok) return; // Silently fail for static hosting
       const data = await res.json();
-      setHistory(data);
+      setHistory(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error("Failed to fetch history:", error);
+      console.warn("History API not available (Static Hosting)");
     }
   };
 
   const loadDailyVibe = async () => {
     try {
       const res = await fetch('/api/daily-vibe');
-      if (!res.ok) throw new Error("Failed to fetch daily vibe");
+      if (!res.ok) return;
       const data = await res.json();
-      setDailyVibe(data.vibe);
+      setDailyVibe(data.vibe || "");
     } catch (error) {
-      console.error("Failed to fetch daily vibe:", error);
+      console.warn("Daily Vibe API not available (Static Hosting)");
     }
   };
 
