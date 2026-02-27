@@ -68,6 +68,15 @@ export async function getMysticInterpretation(type: MysticType, data: any) {
     return response.text;
   } catch (error: any) {
     console.error("Error fetching interpretation:", error);
-    return `Lỗi: ${error.message || "Dòng năng lượng đang bị nhiễu. Vui lòng kiểm tra cấu hình API Key."}`;
+    
+    // Handle specific API errors
+    const errorString = error.toString();
+    if (errorString.includes("429") || errorString.includes("RESOURCE_EXHAUSTED")) {
+      return "### ⚠️ Thông báo từ Vũ trụ\n\nHiện tại " + 
+             "hệ thống đang nhận được quá nhiều yêu cầu cùng lúc (vượt quá hạn mức API miễn phí). " +
+             "Vui lòng đợi khoảng 1-2 phút và thử lại nhé. Năng lượng của các vì sao cần thời gian để hồi phục! ✨";
+    }
+    
+    return `Lỗi: ${error.message || "Dòng năng lượng đang bị nhiễu. Vui lòng thử lại sau."}`;
   }
 }
